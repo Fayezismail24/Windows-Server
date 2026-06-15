@@ -3,6 +3,7 @@
 A comprehensive reference for Windows Server editions — covering key differences, use cases, licensing rights, and virtualization entitlements.
 
 
+
 ## Quick Comparison
 
 | Feature | Essentials | Standard | Datacenter | Azure Edition |
@@ -181,3 +182,15 @@ How many VMs will run on this physical host?
 
 > ⚠️ Windows Server 2019 is past mainstream support. Plan upgrades accordingly.
 
+---
+
+## Related Topics
+
+- [Licensing Models](../licensing/README.md)
+- [Client Access Licenses (CALs)](../cals/README.md)
+- [Evaluation & Trial](../evaluation/README.md)
+- [Core Licensing Rules](../licensing/core-licensing.md)
+
+---
+
+*Last updated: June 2026 | Based on Microsoft official documentation*
