@@ -2,26 +2,30 @@
 
 A comprehensive reference for Windows Server editions — covering key differences, use cases, licensing rights, and virtualization entitlements.
 
-
+---
 
 ## Quick Comparison
 
-| Feature | Essentials | Standard | Datacenter | Azure Edition |
-|---|---|---|---|---|
-| **Target** | Small business | General purpose | Highly virtualized | Azure-only |
-| **Max Users** | 25 | Unlimited | Unlimited | Unlimited |
-| **Max Devices** | 50 | Unlimited | Unlimited | Unlimited |
-| **CALs Required** | ❌ No | ✅ Yes | ✅ Yes | ❌ No (Azure billing) |
-| **VM Rights (OSEs)** | 1 (physical only) | 2 VMs per license | Unlimited VMs | Unlimited (Azure) |
-| **Hyper-V Host** | ❌ | ✅ | ✅ | ❌ |
-| **Failover Clustering** | ❌ | ✅ | ✅ | ✅ |
-| **Storage Spaces Direct** | ❌ | ❌ | ✅ | ✅ |
-| **Shielded VMs** | ❌ | ❌ | ✅ | ✅ |
-| **Software-Defined Networking** | ❌ | ❌ | ✅ | ✅ |
-| **Hotpatch (no-reboot updates)** | ❌ | ❌ | ❌ | ✅ |
-| **SMB over QUIC** | ❌ | ❌ | ❌ | ✅ |
-| **Available On-Premises** | ✅ | ✅ | ✅ | ❌ |
-| **Available on Azure** | ❌ | ✅ | ✅ | ✅ |
+| Feature | Essentials | Standard | Datacenter | Azure Edition | Evaluation |
+|---|---|---|---|---|---|
+| **Target** | Small business | General purpose | Highly virtualized | Azure-only | Lab / Testing |
+| **Cost** | Paid | Paid | Paid | Azure billing | Free |
+| **Duration** | Perpetual | Perpetual | Perpetual | Subscription | 180 days (extendable) |
+| **Max Users** | 25 | Unlimited | Unlimited | Unlimited | Unlimited |
+| **Max Devices** | 50 | Unlimited | Unlimited | Unlimited | Unlimited |
+| **CALs Required** | ❌ No | ✅ Yes | ✅ Yes | ❌ No (Azure billing) | ❌ No |
+| **Production Use** | ✅ | ✅ | ✅ | ✅ | ❌ Not permitted |
+| **VM Rights (OSEs)** | 1 (physical only) | 2 VMs per license | Unlimited VMs | Unlimited (Azure) | Unlimited (Datacenter-based) |
+| **Hyper-V Host** | ❌ | ✅ | ✅ | ❌ | ✅ |
+| **Failover Clustering** | ❌ | ✅ | ✅ | ✅ | ✅ |
+| **Storage Spaces Direct** | ❌ | ❌ | ✅ | ✅ | ✅ |
+| **Shielded VMs** | ❌ | ❌ | ✅ | ✅ | ✅ |
+| **Software-Defined Networking** | ❌ | ❌ | ✅ | ✅ | ✅ |
+| **Hotpatch (no-reboot updates)** | ❌ | ❌ | ❌ | ✅ | ❌ |
+| **SMB over QUIC** | ❌ | ❌ | ❌ | ✅ | ❌ |
+| **Available On-Premises** | ✅ | ✅ | ✅ | ❌ | ✅ |
+| **Available on Azure** | ❌ | ✅ | ✅ | ✅ | ❌ |
+| **Convertible to Full License** | N/A | N/A | N/A | N/A | ✅ In-place |
 
 ---
 
@@ -184,11 +188,169 @@ How many VMs will run on this physical host?
 
 ---
 
+## Evaluation Edition
+
+Microsoft provides a **free 180-day trial** of Windows Server (Standard and Datacenter) through the Microsoft Evaluation Center. It is fully functional with no feature restrictions — the only limitation is the time window.
+
+| Property | Details |
+|---|---|
+| **Duration** | 180 days |
+| **Editions available** | Standard, Datacenter |
+| **Feature restrictions** | None |
+| **Extendable** | Yes — up to 5 times via `slmgr /rearm` |
+| **Convertible to full license** | Yes — in-place, no reinstall needed |
+| **Production use allowed** | ❌ Not permitted per EULA |
+| **Requires Microsoft account** | ✅ Yes (for download) |
+| **Available versions** | Windows Server 2022, 2025 |
+
+---
+
+### Download
+
+1. Go to **[microsoft.com/evalcenter](https://www.microsoft.com/en-us/evalcenter)**
+2. Select **Windows Server 2025** or **Windows Server 2022**
+3. Sign in with a Microsoft account (free account is sufficient)
+4. Fill in a short registration form
+5. Choose your download format:
+
+| Format | Description | Best for |
+|---|---|---|
+| **ISO** | Bootable installer image | Bare-metal installs, VMs via ISO mount |
+| **VHDX** | Pre-built virtual hard disk | Hyper-V — fastest way to spin up a test VM |
+
+> 💡 **Tip:** The VHDX is the quickest option for lab environments — attach it to a new Hyper-V VM and boot directly, no installation wizard needed.
+
+---
+
+### Installation Options
+
+During setup, you will be prompted to choose an installation type:
+
+| Option | Description | Recommended? |
+|---|---|---|
+| **Server Core** | CLI only, no GUI | ✅ Microsoft's recommended direction — lower attack surface, less resource usage |
+| **Desktop Experience** | Full GUI (like Windows) | Better for learning/lab environments |
+
+> ⚠️ You cannot switch between Core and Desktop Experience after installation without reinstalling. Choose carefully.
+
+---
+
+### Activation Status
+
+Check your current evaluation status at any time:
+
+```cmd
+slmgr /xpr
+```
+
+This shows the license expiry date in a dialog box.
+
+To see detailed license info:
+
+```cmd
+slmgr /dlv
+```
+
+---
+
+### Extending the Evaluation
+
+The evaluation can be extended using the **rearm** command. Each rearm adds another 180 days.
+
+```cmd
+slmgr /rearm
+```
+
+- Maximum of **5 rearms** allowed
+- Requires a **reboot** after each rearm
+- Gives up to ~**3 years** of evaluation time total (180 days × 6 periods)
+
+**Check remaining rearm count:**
+
+```cmd
+slmgr /dlv
+```
+
+Look for the line: `Remaining Windows rearm count`
+
+> ⚠️ Once all rearms are exhausted, the system will nag on login and the screen may dim. It will not automatically shut down or delete data, but it is not suitable for any use at that point.
+
+---
+
+### What Happens at Expiry
+
+| Behavior | Details |
+|---|---|
+| Login warning | Displayed on every login |
+| Screen dimming | Desktop background turns black |
+| Auto shutdown | ❌ Does not occur (Server 2019+) |
+| Data loss | ❌ Does not occur |
+| Services stop | ❌ Services keep running |
+
+> The system remains technically operational after expiry but is non-compliant. Convert or rearm before expiry in any active lab environment.
+
+---
+
+### Converting to a Full License
+
+Once you purchase a license, you can activate in-place — **no reinstall required**.
+
+**Standard Edition:**
+
+```cmd
+DISM /online /Set-Edition:ServerStandard /ProductKey:XXXXX-XXXXX-XXXXX-XXXXX-XXXXX /AcceptEula
+```
+
+**Datacenter Edition:**
+
+```cmd
+DISM /online /Set-Edition:ServerDatacenter /ProductKey:XXXXX-XXXXX-XXXXX-XXXXX-XXXXX /AcceptEula
+```
+
+> ⚠️ You can only convert **upward** (Eval → Standard or Eval → Datacenter). You cannot downgrade using DISM.
+
+Alternatively, inject the product key directly if the edition already matches your license:
+
+```cmd
+slmgr /ipk XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
+slmgr /ato
+```
+
+---
+
+### Evaluation vs Full License
+
+| Aspect | Evaluation | Full License |
+|---|---|---|
+| Cost | Free | Paid |
+| Duration | 180 days (extendable) | Perpetual or subscription |
+| Windows Update | ⚠️ Limited during eval period | ✅ Full access |
+| Production use | ❌ Not permitted (EULA) | ✅ |
+| Domain join | ✅ Allowed | ✅ |
+| All server roles | ✅ Available | ✅ |
+| Azure Hybrid Benefit | ❌ | ✅ (with SA) |
+
+---
+
+### Quick Reference — slmgr Commands
+
+| Task | Command |
+|---|---|
+| Check expiry date | `slmgr /xpr` |
+| View detailed license info | `slmgr /dlv` |
+| Extend evaluation (rearm) | `slmgr /rearm` |
+| Inject a product key | `slmgr /ipk <key>` |
+| Activate online | `slmgr /ato` |
+| Convert edition via DISM | `DISM /online /Set-Edition:<edition> /ProductKey:<key> /AcceptEula` |
+| Uninstall current key | `slmgr /upk` |
+| Clear key from registry | `slmgr /cpky` |
+
+---
+
 ## Related Topics
 
 - [Licensing Models](../licensing/README.md)
 - [Client Access Licenses (CALs)](../cals/README.md)
-- [Evaluation & Trial](../evaluation/README.md)
 - [Core Licensing Rules](../licensing/core-licensing.md)
 
 ---
